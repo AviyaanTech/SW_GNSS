@@ -1,0 +1,100 @@
+﻿<Window x:Class="SW_GNSS.FrmAbout"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SW_GNSS"
+        mc:Ignorable="d"
+        Title="About" Height="Auto" Width="523" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded">
+	<Window.Resources>
+		<Style TargetType="Image">
+			<Setter Property="Height" Value="64" />
+			<Setter Property="Width" Value="64" />
+			<Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+		</Style>
+	</Window.Resources>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<Image  Grid.Column="0" Width="64" Height="64"  Source="/icon.ico"/>
+			<StackPanel  Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" Margin="8,0,0,0">
+				<TextBlock Text="SW GNSS"  VerticalAlignment="Top" FontSize="24"/>
+				<TextBlock x:Name="lblVersion" Text="Version 1.0.0.0"  VerticalAlignment="Top"/>
+			</StackPanel>
+			<Label  Grid.Column="2" Content="For Free Distribution" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Foreground="#FF004DAA"/>
+		</Grid>
+
+		<StackPanel Grid.Row="1" Width="520">
+			<TextBlock  TextWrapping="Wrap" >
+			SW GNSS is a free software for post-processing GNSS data. It supports static, kinematic and PPP processing.
+			</TextBlock>
+			<TextBlock  TextWrapping="Wrap"  Margin="0,8,0,0">
+				PPP correction files are downloaded automatically from IGS and the European Space Agency.
+			</TextBlock>
+			<TextBlock>
+					<Hyperlink NavigateUri="http://navigation-office.esa.int/products/gnss-products/" RequestNavigate="Hyperlink_RequestNavigate">
+						http://navigation-office.esa.int/products/gnss-products/
+					</Hyperlink>
+			</TextBlock>
+
+			<TextBlock  TextWrapping="Wrap"  Margin="0,8,0,0">
+				The post-processing engine is based on the open source RTKLIB program by T. Takasu.</TextBlock>
+			<TextBlock>
+					<Hyperlink NavigateUri="http://www.rtklib.com/" RequestNavigate="Hyperlink_RequestNavigate">
+					http://www.rtklib.com/
+					</Hyperlink>
+			</TextBlock>
+
+		</StackPanel>
+		<Grid Grid.Row="2" Margin="0,8,0,0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<StackPanel  Orientation="Vertical" Margin="4">
+				<TextBlock FontWeight="Bold">Developed by Aviyaan Tech. Published by Softwel (P) Ltd</TextBlock>
+				<TextBlock>254 Shree Ekata Marga, New Baneshwor</TextBlock>
+				<TextBlock>Kathmandu-31, Kathmandu, Nepal</TextBlock>
+				<TextBlock>Phone: +977-1-4566627, 4566629</TextBlock>
+				<TextBlock>Email: support@softwel.com.np</TextBlock>
+
+
+				<TextBlock>
+					<Hyperlink NavigateUri="http://softwel.com.np" RequestNavigate="Hyperlink_RequestNavigate">
+					http://softwel.com.np
+					</Hyperlink>
+				</TextBlock>
+				<TextBlock>
+					<Hyperlink NavigateUri="http://softwel.com.np" RequestNavigate="Hyperlink_RequestNavigate">
+					http://aviyaan.com
+					</Hyperlink>
+				</TextBlock>
+			</StackPanel>
+
+			<StackPanel Grid.Column="1" HorizontalAlignment="Right">
+				<Image Height="74" Width="170" Source="/Resources/AviyaanTech.png" />
+				<Image Height="74" Width="170" Source="/Resources/Softwel.png" />
+			</StackPanel>
+
+		</Grid>
+
+
+		<Label Grid.Row="3">Software Development: Avinab Malla</Label>
+
+
+	</Grid>
+</Window>

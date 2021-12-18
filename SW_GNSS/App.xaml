@@ -1,0 +1,18 @@
+﻿<Application x:Class="SW_GNSS.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:SW_GNSS"
+					Exit="Application_Exit"
+             StartupUri="MainWindow.xaml">
+
+	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Assets/styles.xaml" />
+				<ResourceDictionary Source="Assets/Theme.xaml" />
+				<ResourceDictionary Source="Assets/IconDictionary.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Application.Resources>
+	
+</Application>

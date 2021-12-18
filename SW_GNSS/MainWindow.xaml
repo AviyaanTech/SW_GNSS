@@ -1,0 +1,231 @@
+﻿<Window x:Class="SW_GNSS.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		  xmlns:map="clr-namespace:SW_GNSS.Map"
+		mc:Ignorable="d"
+		Loaded="Window_Loaded"
+	
+        Title="SW GNSS Post Processing" Height="600" Width="1024" MinHeight="600">
+	<DockPanel>
+		<Menu DockPanel.Dock="Top" Background="White">
+			<MenuItem Header="File">
+				<MenuItem Header="Export Data">
+					<MenuItem Header="Export to Excel" x:Name="exportXls" Click="exportXls_Click"/>
+				</MenuItem>
+				<MenuItem Header="Export Corrected SW Maps">
+					<MenuItem Header="Corrected SWMZ" x:Name="exportSwmz" Click="exportSwmz_Click"/>
+					<MenuItem Header="Corrected KMZ" x:Name="exportKmz" Click="exportKmz_Click"/>
+					<MenuItem Header="Corrected Shapefiles" x:Name="exportShp" Click="exportShp_Click"/>
+					<MenuItem Header="Corrected GeoPackage" x:Name="exportGpkg" Click="exportGpkg_Click"/>
+				</MenuItem>
+				<MenuItem Header="Export SW Maps">
+					<MenuItem Header="KMZ" x:Name="exportRawKmz" Click="exportRawKmz_Click"/>
+					<MenuItem Header="Shapefiles" x:Name="exportRawShp" Click="exportRawShp_Click"/>
+					<MenuItem Header="GeoPackage" x:Name="exportRawGpkg" Click="exportRawGpkg_Click"/>
+				</MenuItem>
+
+				<MenuItem Header="Exit" x:Name="mnuExit" Click="mnuExit_Click"/>
+			</MenuItem>
+			<MenuItem Header="Map">
+				<MenuItem Header="Open in RTKPLOT" x:Name="mnuRtkPlot" Click="mnuRtkPlot_Click"/>
+				<MenuItem Header="Tile Sources" x:Name="mnuTileSources" Click="mnuTileSources_Click"/>
+			</MenuItem>
+			<MenuItem Header="Help">
+				<MenuItem Header="About" x:Name="mnuAbout" Click="mnuAbout_Click"/>
+			</MenuItem>
+		</Menu>
+
+		<StatusBar DockPanel.Dock="Bottom" Height="24" HorizontalAlignment="Stretch" >
+			<StatusBarItem>
+				<TextBlock Grid.Column="0" x:Name="lblStatus" Text="Ready"></TextBlock>
+			</StatusBarItem>
+		</StatusBar>
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" MinWidth="280" MaxWidth="400"/>
+				<ColumnDefinition Width="5"/>
+				<ColumnDefinition Width="2*"/>
+			</Grid.ColumnDefinitions>
+
+			<TabControl Grid.Column="2" >
+				<TabItem Header="Solution" Height="20" VerticalAlignment="Top">
+					<TextBox x:Name="txtSolution"  HorizontalScrollBarVisibility="Auto" IsReadOnly="True" VerticalScrollBarVisibility="Visible" FontFamily="Consolas">
+					</TextBox>
+				</TabItem>
+
+				<TabItem Header="Map">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<StackPanel Grid.Row="0" Orientation="Horizontal">
+							<Label>Background Map</Label>
+							<ComboBox x:Name="cmbBgMap" Width="230" SelectionChanged="cmbBgMap_SelectionChanged"></ComboBox>
+						</StackPanel>
+						<map:MapView Grid.Row="1" x:Name="mapView"></map:MapView>
+					</Grid>
+				</TabItem>
+
+				<TabItem Header="SW Maps Corrections">
+					<DataGrid 
+										x:Name="dgvSwMapsCorrections"
+										CanUserDeleteRows="False"
+										IsReadOnly="True" 
+										CanUserAddRows="False"
+										RowHeight="22">
+
+						<DataGrid.Style>
+							<Style TargetType="DataGrid">
+								<Setter Property="AlternatingRowBackground" Value="AliceBlue"></Setter>
+								<Setter Property="AlternationCount" Value="1"></Setter>
+								<Setter Property="AutoGenerateColumns" Value="False"/>
+								<Setter Property="GridLinesVisibility" Value="All"></Setter>
+								<Setter Property="VerticalGridLinesBrush" Value="LightGray"></Setter>
+								<Setter Property="HorizontalGridLinesBrush" Value="LightGray"></Setter>
+							</Style>
+						</DataGrid.Style>
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Layer" Width="2*" Binding="{Binding LayerName}"></DataGridTextColumn>
+							<DataGridTextColumn Header="Feature Name" Width="2*" Binding="{Binding FeatureName}"></DataGridTextColumn>
+							<DataGridTextColumn Header="Index" Width="40" Binding="{Binding Index}"></DataGridTextColumn>
+							<DataGridTextColumn Header="Avg Count"  Width="80"   Binding="{Binding AverageCount}"></DataGridTextColumn>
+							<DataGridTextColumn Header="Delta E" Width="60" Binding="{Binding DeltaE}"></DataGridTextColumn>
+							<DataGridTextColumn Header="Delta N" Width="60"  Binding="{Binding DeltaN}"></DataGridTextColumn>
+							<DataGridTextColumn Header="Delta U" Width="60"  Binding="{Binding DeltaU}"></DataGridTextColumn>
+							<DataGridTextColumn Header="Fix Type" Width="70"  Binding="{Binding FixType}"></DataGridTextColumn>
+							<DataGridTextColumn Header="SDE" Width="70"  Binding="{Binding SDE}"></DataGridTextColumn>
+							<DataGridTextColumn Header="SDN" Width="70"  Binding="{Binding SDN}"></DataGridTextColumn>
+							<DataGridTextColumn Header="SDU" Width="70"  Binding="{Binding SDU}"></DataGridTextColumn>
+						</DataGrid.Columns>
+					</DataGrid>
+				</TabItem>
+			</TabControl>
+
+
+			<GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+			<Grid Grid.Column="0" Margin="4" x:Name="grdInput">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="3*"/>
+					<RowDefinition Height="3*"/>
+					<RowDefinition  Height="Auto" />
+					<RowDefinition  Height="Auto" />
+				</Grid.RowDefinitions>
+				<GroupBox x:Name="grpProcessingSettings" Header="Processing Options" Margin="4" Padding="2">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+						<Label>Processing Mode</Label>
+						<ComboBox Grid.Column="1" SelectedIndex="0" x:Name="cmbProcessingMode" SelectionChanged="cmbProcessingMode_SelectionChanged">
+							<ComboBox.Items>
+								<ComboBoxItem>Kinematic</ComboBoxItem>
+								<ComboBoxItem>Static</ComboBoxItem>
+								<ComboBoxItem>Single</ComboBoxItem>
+								<ComboBoxItem>PPP-Static</ComboBoxItem>
+								<ComboBoxItem>PPP-Kinematic</ComboBoxItem>
+							</ComboBox.Items>
+						</ComboBox>
+						<Button Grid.Column="2" Margin="4,0,0,0" Content="{StaticResource Settings}" x:Name="btnSettings" Click="btnSettings_Click"/>
+					</Grid>
+				</GroupBox>
+				<GroupBox Grid.Row="1" x:Name="grpRover" Header="Rover Data" Margin="4" Padding="2">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+
+						<DataGrid x:Name="dgvRoverFiles" 
+								  CanUserDeleteRows="False" 
+								  IsReadOnly="True"  
+								  CanUserAddRows="False" 
+								  RowHeight="22">
+
+							<DataGrid.Style>
+								<Style TargetType="DataGrid">
+									<Setter Property="AlternatingRowBackground" Value="AliceBlue"></Setter>
+									<Setter Property="AlternationCount" Value="1"></Setter>
+									<Setter Property="AutoGenerateColumns" Value="False"/>
+									<Setter Property="GridLinesVisibility" Value="All"></Setter>
+									<Setter Property="VerticalGridLinesBrush" Value="LightGray"></Setter>
+									<Setter Property="HorizontalGridLinesBrush" Value="LightGray"></Setter>
+								</Style>
+							</DataGrid.Style>
+							<DataGrid.Columns>
+								<DataGridTextColumn Header="File Name" Width="*" Binding="{Binding Name}"></DataGridTextColumn>
+								<DataGridTextColumn Header="File Type"  Binding="{Binding FileType}"></DataGridTextColumn>
+							</DataGrid.Columns>
+						</DataGrid>
+						<CheckBox Grid.Row="1" Content="Use Raw Data From SW Maps Project" x:Name="chkSwMapsRaw"/>
+						<StackPanel Grid.Row="2" Orientation="Horizontal">
+							<Button Content="Add" Width="80" Height="24" Margin="3" x:Name="btnAddRoverData" Click="btnAddRoverData_Click"></Button>
+							<Button Content="Remove" Width="80" Height="24" Margin="3" x:Name="btnRemoveRoverData" Click="btnRemoveRoverData_Click"></Button>
+						</StackPanel>
+					</Grid>
+				</GroupBox>
+
+				<GroupBox Grid.Row="2" x:Name="grpBase"  Header="Base Station Data"  Margin="4" Padding="2">
+
+					<Grid Grid.Row="1" Grid.ColumnSpan="2">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+						<DataGrid 
+										x:Name="dgvBaseFiles"
+										CanUserDeleteRows="False"
+										IsReadOnly="True" 
+										CanUserAddRows="False"
+										RowHeight="22">
+
+							<DataGrid.Style>
+								<Style TargetType="DataGrid">
+									<Setter Property="AlternatingRowBackground" Value="AliceBlue"></Setter>
+									<Setter Property="AlternationCount" Value="1"></Setter>
+									<Setter Property="AutoGenerateColumns" Value="False"/>
+									<Setter Property="GridLinesVisibility" Value="All"></Setter>
+									<Setter Property="VerticalGridLinesBrush" Value="LightGray"></Setter>
+									<Setter Property="HorizontalGridLinesBrush" Value="LightGray"></Setter>
+								</Style>
+							</DataGrid.Style>
+							<DataGrid.Columns>
+								<DataGridTextColumn Header="File Name" Width="*" Binding="{Binding Name}"></DataGridTextColumn>
+								<DataGridTextColumn Header="File Type"  Binding="{Binding FileType}"></DataGridTextColumn>
+							</DataGrid.Columns>
+						</DataGrid>
+
+						<StackPanel Grid.Row="2" Orientation="Horizontal">
+							<Button Content="Add" Width="80" Height="24" Margin="3" x:Name="btnAddBaseData" Click="btnAddBaseData_Click"></Button>
+							<Button Content="Remove" Width="80" Height="24" Margin="3" x:Name="btnRemoveBaseData" Click="btnRemoveBaseData_Click"></Button>
+						</StackPanel>
+					</Grid>
+
+
+				</GroupBox>
+
+				<GroupBox Grid.Row="3" Header="SW Maps Project" x:Name="grpSwMaps" Margin="4">
+					<StackPanel Orientation="Vertical">
+						<TextBlock TextWrapping="WrapWithOverflow" x:Name="swmapsFilePathLabel">
+							No file selected!
+						</TextBlock>
+
+						<Button x:Name="btnBrowseSwmz" Height="24" Margin="4" Click="btnBrowseSwmz_Click">Browse</Button>
+					</StackPanel>
+				</GroupBox>
+
+				<Button Grid.Row="4" Height="28" Margin="4" x:Name="btnProcess" Click="btnProcess_Click">Start Processing</Button>
+			</Grid>
+		</Grid>
+
+
+
+	</DockPanel>
+</Window>
